@@ -1,12 +1,12 @@
 const path = require("path");
 const merge = require("webpack-merge");
-const common = require("./webpack.bash.js");
-
+const bash = require("./webpack.bash.js");
 const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 const PUBLIC_PATH = "/";
 
-module.exports = merge(common, {
+module.exports = merge(bash, {
   entry: {
     app: ["react-hot-loader/patch", "./src/index.js"]
   },
@@ -36,17 +36,7 @@ module.exports = merge(common, {
           "style-loader",
           "css-loader",
           "postcss-loader",
-          {
-            loader: "less-loader",
-            options: {
-              javascriptEnabled: true,
-              modifyVars: {
-                "@primary-color": "#71777c",
-                "@layout-trigger-background": "#FFF",
-                "@menu-item-color": "#71777c"
-              }
-            }
-          }
+          'less-loader'
         ]
       }
     ]
@@ -66,7 +56,7 @@ module.exports = merge(common, {
     compress: true,
     historyApiFallback: true,
     host: "localhost",
-    port: 8080,
+    // port: 9000,
     overlay: true,
     watchOptions: {
       poll: true

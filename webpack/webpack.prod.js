@@ -1,7 +1,6 @@
 const merge = require("webpack-merge");
-const common = require("./webpack.bash.js");
+const bash = require("./webpack.bash.js");
 const path = require("path");
-var webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin"); //单独打包css
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
@@ -11,7 +10,8 @@ const CopyWebpackPlugin = require("copy-webpack-plugin"); // 复制文件用
 const {GenerateSW} = require('workbox-webpack-plugin');
 
 const PUBLIC_PATH = "/";
-const pro = merge(common, {
+
+module.exports = merge(bash, {
   output:{
     path: path.resolve(__dirname, "..", "dist"),
     filename: "js/[name]-[chunkhash:8].chunk.js",
@@ -64,17 +64,7 @@ const pro = merge(common, {
           }, // creates style nodes from JS strings
           "css-loader", // translates CSS into CommonJS
           "postcss-loader",
-          {
-            loader: "less-loader",
-            options: {
-              javascriptEnabled: true,
-              modifyVars: {
-                "@primary-color": "#71777c",
-                "@layout-trigger-background": "#FFF",
-                "@menu-item-color": "#71777c"
-              }
-            }
-          }
+          "less-loader"
         ]
       }
     ]
@@ -87,21 +77,11 @@ const pro = merge(common, {
       chunkFilename: "css/[id].[contenthash].css"
     }),
     new CompressionPlugin({
-      //gzip压缩,需要服务端配合
       filename: "[path].gz[query]",
       algorithm: "gzip",
       test: new RegExp("\\.(js|css)$"),
       threshold: 10240,
       minRatio: 0.8
-    }),
-    /**
-     * 在window环境中注入全局变量
-     * 这里这么做是因为src/registerServiceWorker.js中有用到，为了配置PWA
-     * **/
-    new webpack.DefinePlugin({
-      "process.env": JSON.stringify({
-        PUBLIC_URL: PUBLIC_PATH.replace(/\/$/, "")
-      })
     }),
     /**
      * 文件复制
@@ -171,9 +151,8 @@ const pro = merge(common, {
           cache: true,
           parallel: true,
           sourceMap: false,
+          warnings: false,  // 在UglifyJs删除没有用到的代码时不输出警告
           compress: {
-            // 在UglifyJs删除没有用到的代码时不输出警告
-            warnings: false,
             // 删除所有的 `console` 语句，可以兼容ie浏览器
             drop_console: true,
             // 内嵌定义了但是只用到一次的变量
@@ -205,5 +184,3 @@ const pro = merge(common, {
   },
   mode: "production"
 });
-
-module.exports = pro;
