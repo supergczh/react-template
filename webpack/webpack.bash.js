@@ -37,7 +37,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: "zhazhahui的博客",
+      title: "",
       filename: "index.html",
       template: "public/index.html",
       chunks: ["app"],
