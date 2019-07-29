@@ -105,7 +105,7 @@ module.exports = merge(bash, {
       // 缓存规则, 具体下面记录, 更详细的请查阅文档。 目前只缓存api
       runtimeCaching: [
         {
-          urlPattern:'',//(/^https:\/\/xxxx\.com\//)
+          urlPattern:/^https:\/\/xxxx\.com\//,//配置要缓存地址
           handler: 'NetworkFirst',
           options: {
             cacheName: 'cached-api',
