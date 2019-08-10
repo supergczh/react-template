@@ -2,13 +2,13 @@ const path = require("path");
 const merge = require("webpack-merge");
 const bash = require("./webpack.bash.js");
 const webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const PUBLIC_PATH = "/";
 
 module.exports = merge(bash, {
   entry: {
-    app: ["react-hot-loader/patch", "./src/index.js"]
+    app: ["react-hot-loader/patch", "./src/index.js"],
+
   },
   output:{
     path: path.resolve(__dirname, "..", "dist"),
@@ -42,11 +42,9 @@ module.exports = merge(bash, {
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
-      filename: "css/[name].css",
-      chunkFilename: "css/[id].css"
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('../dll/library.manifest.json'),
     }),
     new webpack.HotModuleReplacementPlugin()
   ],
@@ -56,7 +54,7 @@ module.exports = merge(bash, {
     compress: true,
     historyApiFallback: true,
     host: "localhost",
-    // port: 9000,
+    port: 9000,
     overlay: true,
     watchOptions: {
       poll: true

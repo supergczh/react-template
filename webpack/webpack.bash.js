@@ -1,8 +1,11 @@
 const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const WebpackBar = require("webpackbar");
-
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin"); 
+const AddAssetHtmlPlugin=require("add-asset-html-webpack-plugin")
+// const os = require('os');
+// const HappyPack = require('happypack');//项目文件过大时可开启,
+// const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 
 module.exports = {
   entry: {
@@ -15,7 +18,8 @@ module.exports = {
         test: /\.js?$/,
         exclude: /node_modules/, // 排除不处理的目录
         include: path.resolve(__dirname, "../src"),
-        use: ["babel-loader"]
+        // use: ['happypack/loader'],
+        use: ['babel-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/,
@@ -44,6 +48,14 @@ module.exports = {
       hash: false,
       favicon: "public/maniicon.ico" //网页icon
     }),
+    new AddAssetHtmlPlugin({
+      filepath: path.resolve(__dirname,'../dll/*.dll.js') // 这个路径是你的dll文件路径 
+    }),
+    // new HappyPack({
+    //   loaders: ['babel-loader'],
+    //   //共享进程池
+    //   threadPool: happyThreadPool,
+    // }),
     new WebpackBar()
   ]
 };
