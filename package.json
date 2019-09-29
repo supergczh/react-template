@@ -3,7 +3,6 @@
 	"version": "1.0.0",
 	"description": "",
 	"private": true,
-	"sideEffects": false,
 	"scripts": {
 		"test": "npx webpack --mode=production",
 		"dll": "webpack -p --config ./webpack/webpack.dll.js --progress --profile --colors",
